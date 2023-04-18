@@ -13,7 +13,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
         try (final Connection connection = DriverManager.getConnection(url, user, password)) {
             Statement statement =
                     connection.createStatement();
-            int adCount = statement.executeUpdate("INSERT INTO employee (first_name, last_name, gender, age) VALUES ('Илья', 'Иванов', 'Мужчина', 27)");
+            int adCount = statement.executeUpdate("INSERT INTO employee (first_name, last_name, gender, age, city_id) VALUES ('Илья', 'Иванов', 'Мужчина', 27, 2)");
 
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
@@ -33,11 +33,13 @@ public class EmployeeDAOImpl implements EmployeeDAO {
                 String lastName = resultSet.getString("last_name");
                 String gender = resultSet.getString("gender");
                 int age = resultSet.getInt("age");
+                int cityID = resultSet.getInt("city_id");
 
                 System.out.println("Имя: " + firstName);
                 System.out.println("Фамилия: " + lastName);
                 System.out.println("Пол: " + gender);
                 System.out.println("Возраст: " + age);
+                System.out.println("Id города: " + cityID);
             }
 
         } catch (SQLException e) {
@@ -61,8 +63,9 @@ public class EmployeeDAOImpl implements EmployeeDAO {
                 String lastName = resultSet.getString("last_name");
                 String gender = resultSet.getString("gender");
                 int age = resultSet.getInt("age");
+                int cityID = resultSet.getInt("city_id");
 
-                employees.add(new Employee(id, firstName, lastName, gender, age));
+                employees.add(new Employee(id, firstName, lastName, gender, age, cityID));
             }
         } catch (SQLException e) {
             System.out.println("Ошибка при подключении к БД!");
@@ -73,7 +76,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 
     @Override
     public void changeEmployee(int id) {
-        String sql = "UPDATE employee SET first_name = 'Ольга', last_name = 'Алексеева', gender = 'Женщина', age = 29 WHERE id = " + id;
+        String sql = "UPDATE employee SET first_name = 'Ирина', last_name = 'Самсонова', gender = 'Женщина', age = 23 WHERE id = " + id;
         try (final Connection connection = DriverManager.getConnection(url, user, password)) {
             Statement statement =
                     connection.createStatement();

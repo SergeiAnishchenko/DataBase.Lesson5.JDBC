@@ -5,13 +5,18 @@ public class Employee {
     private String gender;
     private int age;
     private int id;
+    private int cityID;
 
-    public Employee(int id, String firstName, String lastName, String gender, int age) {
+
+    public Employee(int id, String firstName, String lastName, String gender, int age, int cityID) {
+        City city = new City();
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;
         this.age = age;
+        this.cityID = city.getCityId();
+
     }
 
     public int getId() {
@@ -20,6 +25,14 @@ public class Employee {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getCityID() {
+        return cityID;
+    }
+
+    public void setCityID(int cityID) {
+        this.cityID = cityID;
     }
 
     public String getFirstName() {

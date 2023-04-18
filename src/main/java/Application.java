@@ -19,12 +19,14 @@ public class Application {
                 String firstName = resultSet.getString("first_name");
                 String lastName = resultSet.getString("last_name");
                 String gender = resultSet.getString("gender");
-                String cityName = resultSet.getString("city_name");
+                int age = resultSet.getInt("age");
+                int cityID = resultSet.getInt("city_id");
 
                 System.out.println("Имя: " + firstName);
                 System.out.println("Фамилия: " + lastName);
                 System.out.println("Пол: " + gender);
-                System.out.println("Город: " + cityName);
+                System.out.println("Возраст: " + age);
+                System.out.println("ID города: " + cityID);
 
             }
 
@@ -32,6 +34,8 @@ public class Application {
             System.out.println("Ошибка при подключении к БД!");
             e.printStackTrace();
         }
+
+        System.out.println();
 
         EmployeeDAO employeeDAO = new EmployeeDAOImpl();
         List<Employee> allEmployees = employeeDAO.getAllEmployees();
@@ -42,11 +46,21 @@ public class Application {
             System.out.println("lastName: " + employee.getLastName());
             System.out.println("gender: " + employee.getGender());
             System.out.println("age: " + employee.getAge());
+            System.out.println("city_id: " + employee.getCityID());
 
         }
+
+        System.out.println();
+
         employeeDAO.adEmployee();
+        System.out.println();
         employeeDAO.getEmployee(3);
-        employeeDAO.changeEmployee(4);
-        employeeDAO.deleteEmployee(2);
+        System.out.println();
+        employeeDAO.changeEmployee(6);
+        System.out.println();
+        employeeDAO.deleteEmployee(18);
+        employeeDAO.deleteEmployee(19);
+        employeeDAO.deleteEmployee(20);
+
     }
 }
