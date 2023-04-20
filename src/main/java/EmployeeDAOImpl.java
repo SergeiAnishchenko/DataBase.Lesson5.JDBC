@@ -1,3 +1,6 @@
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +24,8 @@ public class EmployeeDAOImpl implements EmployeeDAO {
     }
 
     @Override
-    public void getEmployee(int id) {
+    public Employee getEmployee(int id) {
+        Employee employee = null;
         String sql = "SELECT * FROM employee WHERE id = " + id;
         try (final Connection connection = DriverManager.getConnection(url, user, password);
              PreparedStatement statement =
@@ -34,18 +38,14 @@ public class EmployeeDAOImpl implements EmployeeDAO {
                 String gender = resultSet.getString("gender");
                 int age = resultSet.getInt("age");
                 int cityID = resultSet.getInt("city_id");
-
-                System.out.println("Имя: " + firstName);
-                System.out.println("Фамилия: " + lastName);
-                System.out.println("Пол: " + gender);
-                System.out.println("Возраст: " + age);
-                System.out.println("Id города: " + cityID);
+                employee = new Employee(id, firstName, lastName, gender, age, cityID);
             }
 
         } catch (SQLException e) {
             System.out.println("Ошибка при подключении к БД!");
             e.printStackTrace();
         }
+        return employee;
     }
 
     @Override
@@ -75,30 +75,31 @@ public class EmployeeDAOImpl implements EmployeeDAO {
     }
 
     @Override
-    public void changeEmployee(int id) {
-        String sql = "UPDATE employee SET first_name = 'Ирина', last_name = 'Самсонова', gender = 'Женщина', age = 23 WHERE id = " + id;
-        try (final Connection connection = DriverManager.getConnection(url, user, password)) {
-            Statement statement =
-                    connection.createStatement();
-            int changeCount = statement.executeUpdate(sql);
-            System.out.println("Количество измененных сотрудников: " + changeCount);
-        } catch (SQLException ex) {
-            throw new RuntimeException(ex);
-        }
+    public void changeEmployee(Employee employee) {
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("myPersistenceUnit");
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
+        employee.setFirstName("Игорь");
+        employee.setLastName("Соколов");
+        employee.setGender("Мужчина");
+        employee.setAge(37);
+        employee.setCityID(3);
+        entityManager.merge(employee);
+        entityManager.getTransaction().commit();
+
+        entityManager.close();
+        entityManagerFactory.close();
     }
 
     @Override
-    public void deleteEmployee(int id) {
-        String sql = "DELETE FROM employee WHERE id = " + id;
+    public void deleteEmployee(Employee employee) {
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("myPersistenceUnit");
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
+        entityManager.remove(employee);
+        entityManager.getTransaction().commit();
 
-        try (final Connection connection = DriverManager.getConnection(url, user, password)) {
-            Statement statement =
-                    connection.createStatement();
-            int deleteCount = statement.executeUpdate(sql);
-            System.out.println("Количество удаленных сотрудников: " + deleteCount);
-
-        } catch (SQLException ex) {
-            throw new RuntimeException(ex);
-        }
+        entityManager.close();
+        entityManagerFactory.close();
     }
 }
