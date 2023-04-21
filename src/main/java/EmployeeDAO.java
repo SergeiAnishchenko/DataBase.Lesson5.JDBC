@@ -3,11 +3,12 @@ import java.util.List;
 public interface EmployeeDAO {
     void adEmployee();
 
-    void getEmployee(int id);
+    Employee getEmployee(int id);
 
     List<Employee> getAllEmployees();
 
-    void changeEmployee(int id);
 
-    void deleteEmployee(int id);
+    void changeEmployee(int id, String firstname, String lastName, String gender, int age, int cityID);
+
+    void deleteEmployee(Employee employee);
 }

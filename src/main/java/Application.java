@@ -1,5 +1,8 @@
 import java.sql.*;
 import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 public class Application {
     public static void main(String[] args) {
@@ -47,20 +50,22 @@ public class Application {
             System.out.println("gender: " + employee.getGender());
             System.out.println("age: " + employee.getAge());
             System.out.println("city_id: " + employee.getCityID());
-
         }
 
         System.out.println();
 
         employeeDAO.adEmployee();
         System.out.println();
-        employeeDAO.getEmployee(3);
+        System.out.println(employeeDAO.getEmployee(3));
         System.out.println();
-        employeeDAO.changeEmployee(6);
+
+
+        employeeDAO.changeEmployee(41,"Андрей", "Постников", "Мужчина", 75, 1);
         System.out.println();
-        employeeDAO.deleteEmployee(18);
-        employeeDAO.deleteEmployee(19);
-        employeeDAO.deleteEmployee(20);
+
+
+        Employee employee2 = employeeDAO.getEmployee(56);
+        employeeDAO.deleteEmployee(employee2);
 
     }
 }
