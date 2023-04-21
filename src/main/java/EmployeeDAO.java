@@ -7,7 +7,8 @@ public interface EmployeeDAO {
 
     List<Employee> getAllEmployees();
 
-    void changeEmployee(Employee employee);
+
+    void changeEmployee(int id, String firstname, String lastName, String gender, int age, int cityID);
 
     void deleteEmployee(Employee employee);
 }

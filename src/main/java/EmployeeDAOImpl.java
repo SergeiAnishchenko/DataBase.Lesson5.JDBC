@@ -75,31 +75,37 @@ public class EmployeeDAOImpl implements EmployeeDAO {
     }
 
     @Override
-    public void changeEmployee(Employee employee) {
+    public void changeEmployee(int id,String firstname, String lastName,String gender,int age,int cityID) {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("myPersistenceUnit");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
-        employee.setFirstName("Игорь");
-        employee.setLastName("Соколов");
-        employee.setGender("Мужчина");
-        employee.setAge(37);
-        employee.setCityID(3);
-        entityManager.merge(employee);
-        entityManager.getTransaction().commit();
 
+        Employee employee = getEmployee(id);
+        employee.setFirstName(firstname);
+        employee.setLastName(lastName);
+        employee.setGender(gender);
+        employee.setAge(age);
+        employee.setCityID(cityID);
+        entityManager.merge(employee);
+
+        entityManager.getTransaction().commit();
         entityManager.close();
         entityManagerFactory.close();
+
     }
 
     @Override
     public void deleteEmployee(Employee employee) {
+
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("myPersistenceUnit");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
-        entityManager.remove(employee);
-        entityManager.getTransaction().commit();
 
+        entityManager.remove(employee);
+
+        entityManager.getTransaction().commit();
         entityManager.close();
         entityManagerFactory.close();
+
     }
 }
