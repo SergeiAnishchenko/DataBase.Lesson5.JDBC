@@ -5,13 +5,10 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 public class Application {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
 
-        final String user = "postgres";
-        final String password = "Zvbkkzvbkk2727!";
-        final String url = "jdbc:postgresql://localhost:5432/skypro5";
         try (final Connection connection =
-                     DriverManager.getConnection(url, user, password);
+                     ConnectionManager.getConnection();
              PreparedStatement statement =
                      connection.prepareStatement("SELECT * FROM employee")) {
 
@@ -30,15 +27,14 @@ public class Application {
                 System.out.println("Пол: " + gender);
                 System.out.println("Возраст: " + age);
                 System.out.println("ID города: " + cityID);
-
             }
-
         } catch (SQLException e) {
             System.out.println("Ошибка при подключении к БД!");
             e.printStackTrace();
         }
-
         System.out.println();
+
+
 
         EmployeeDAO employeeDAO = new EmployeeDAOImpl();
         List<Employee> allEmployees = employeeDAO.getAllEmployees();
@@ -51,17 +47,24 @@ public class Application {
             System.out.println("age: " + employee.getAge());
             System.out.println("city_id: " + employee.getCityID());
         }
-
         System.out.println();
 
-        employeeDAO.adEmployee();
+
+
+        String newEmployee = "INSERT INTO employee (first_name, last_name, gender, age, city_id) VALUES ('Федор', 'Пастухов', 'Мужчина', 27, 2)";
+        employeeDAO.adEmployee(newEmployee);
         System.out.println();
+
+
+
         System.out.println(employeeDAO.getEmployee(3));
         System.out.println();
 
 
-        employeeDAO.changeEmployee(41,"Андрей", "Постников", "Мужчина", 75, 1);
+
+        employeeDAO.changeEmployee(41, "Андрей", "Постников", "Мужчина", 75, 1);
         System.out.println();
+
 
 
         Employee employee2 = employeeDAO.getEmployee(56);
