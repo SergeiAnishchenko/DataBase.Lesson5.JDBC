@@ -66,8 +66,7 @@ public class Application {
         System.out.println();
 
 
-
-        Employee employee2 = employeeDAO.getEmployee(56);
+        Employee employee2 = employeeDAO.getEmployee(64);
         employeeDAO.deleteEmployee(employee2);
 
     }
