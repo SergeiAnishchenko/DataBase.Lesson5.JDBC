@@ -7,16 +7,14 @@ import java.util.List;
 
 public class EmployeeDAOImpl implements EmployeeDAO {
 
-    final String user = "postgres";
-    final String password = "Zvbkkzvbkk2727!";
-    final String url = "jdbc:postgresql://localhost:5432/skypro5";
+
 
     @Override
-    public void adEmployee() {
-        try (final Connection connection = DriverManager.getConnection(url, user, password)) {
+    public void adEmployee(String newEmployee) {
+        try (final Connection connection = ConnectionManager.getConnection()) {
             Statement statement =
                     connection.createStatement();
-            int adCount = statement.executeUpdate("INSERT INTO employee (first_name, last_name, gender, age, city_id) VALUES ('Илья', 'Иванов', 'Мужчина', 27, 2)");
+            int adCount = statement.executeUpdate(newEmployee);
 
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
@@ -27,10 +25,9 @@ public class EmployeeDAOImpl implements EmployeeDAO {
     public Employee getEmployee(int id) {
         Employee employee = null;
         String sql = "SELECT * FROM employee WHERE id = " + id;
-        try (final Connection connection = DriverManager.getConnection(url, user, password);
+        try (final Connection connection = ConnectionManager.getConnection();
              PreparedStatement statement =
                      connection.prepareStatement(sql)) {
-
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 String firstName = resultSet.getString("first_name");
@@ -48,11 +45,12 @@ public class EmployeeDAOImpl implements EmployeeDAO {
         return employee;
     }
 
+
     @Override
     public List<Employee> getAllEmployees() {
         List<Employee> employees = new ArrayList<>();
 
-        try (final Connection connection = DriverManager.getConnection(url, user, password);
+        try (final Connection connection = ConnectionManager.getConnection();
              PreparedStatement statement =
                      connection.prepareStatement("SELECT * FROM employee")) {
 
@@ -74,12 +72,13 @@ public class EmployeeDAOImpl implements EmployeeDAO {
         return employees;
     }
 
+
     @Override
     public void changeEmployee(int id,String firstname, String lastName,String gender,int age,int cityID) {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("myPersistenceUnit");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
-        entityManager.getTransaction().begin();
 
+        entityManager.getTransaction().begin();
         Employee employee = getEmployee(id);
         employee.setFirstName(firstname);
         employee.setLastName(lastName);
@@ -87,25 +86,25 @@ public class EmployeeDAOImpl implements EmployeeDAO {
         employee.setAge(age);
         employee.setCityID(cityID);
         entityManager.merge(employee);
-
         entityManager.getTransaction().commit();
+
         entityManager.close();
         entityManagerFactory.close();
 
     }
+
 
     @Override
     public void deleteEmployee(Employee employee) {
 
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("myPersistenceUnit");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
+
         entityManager.getTransaction().begin();
-
         entityManager.remove(employee);
-
         entityManager.getTransaction().commit();
+
         entityManager.close();
         entityManagerFactory.close();
-
     }
 }
