@@ -11,5 +11,4 @@ public interface EmployeeDAO {
     void changeEmployee(int id, String firstname, String lastName, String gender, int age, int cityID);
 
 
-    void deleteEmployee(Employee employee);
-}
+    void deleteEmployee(int id);
