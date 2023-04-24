@@ -79,7 +79,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         entityManager.getTransaction().begin();
-        Employee employee = getEmployee(id);
+        Employee employee = entityManager.find(Employee.class, id);
         employee.setFirstName(firstname);
         employee.setLastName(lastName);
         employee.setGender(gender);
@@ -95,12 +95,13 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 
 
     @Override
-    public void deleteEmployee(Employee employee) {
+    public void deleteEmployee(int id) {
 
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("myPersistenceUnit");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         entityManager.getTransaction().begin();
+        Employee employee = entityManager.find(Employee.class,id);
         entityManager.remove(employee);
         entityManager.getTransaction().commit();
 

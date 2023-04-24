@@ -62,13 +62,12 @@ public class Application {
 
 
 
-        employeeDAO.changeEmployee(41, "Андрей", "Постников", "Мужчина", 75, 1);
+        employeeDAO.changeEmployee(3, "Сергей", "Прохоров", "Мужчина", 65, 3);
         System.out.println();
 
 
 
-        Employee employee2 = employeeDAO.getEmployee(56);
-        employeeDAO.deleteEmployee(employee2);
+        employeeDAO.deleteEmployee(66);
 
     }
 }
