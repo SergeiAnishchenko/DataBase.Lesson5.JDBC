@@ -6,9 +6,9 @@ public interface EmployeeDAO {
 
     Employee getEmployee(int id);
 
-    List<Employee> getAllEmployees();
+    void getAllEmployees();
 
-    void changeEmployee(int id, String firstname, String lastName, String gender, int age, int cityID);
-
+    void changeEmployee(int id, String firstname, String lastName, String gender, int age, City city);
 
     void deleteEmployee(int id);
+}
