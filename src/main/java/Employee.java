@@ -1,9 +1,5 @@
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "employee")
@@ -25,20 +21,35 @@ public class Employee {
     @Column(name = "age")
     private int age;
 
-    @Column(name = "city_id")
-    private int cityID;
+
+    @ManyToOne
+    @JoinColumn(name = "city_id")
+    private City city;
 
     public Employee() {}
 
-    public Employee(int id, String firstName, String lastName, String gender, int age, int cityID) {
-        City city = new City();
+    public Employee(int id, String firstName, String lastName, String gender, int age, City city) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;
         this.age = age;
-        this.cityID = city.getCityId();
+        this.city = city;
+    }
 
+    public Employee(String firstName, String lastName, String gender, int age) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.gender = gender;
+        this.age = age;
+    }
+
+    public Employee(String firstName, String lastName, String gender, int age, City city) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.gender = gender;
+        this.age = age;
+        this.city = city;
     }
 
     public int getId() {
@@ -49,13 +60,6 @@ public class Employee {
         this.id = id;
     }
 
-    public int getCityID() {
-        return cityID;
-    }
-
-    public void setCityID(int cityID) {
-        this.cityID = cityID;
-    }
 
     public String getFirstName() {
         return firstName;
@@ -89,15 +93,35 @@ public class Employee {
         this.age = age;
     }
 
+    public City getCity() {
+        return city;
+    }
+
+    public void setCity(City city) {
+        this.city = city;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Employee)) return false;
+        Employee employee = (Employee) o;
+        return id == employee.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
     @Override
     public String toString() {
         return "Employee{" +
-                "id= " + id +
-                ", имя " + firstName + '\'' +
-                ", фамилия " + lastName + '\'' +
-                ", пол " + gender + '\'' +
+                "Идентификатор сотрудника: " + id +
+                ", имя " + firstName +
+                ", фамилия " + lastName +
+                ", пол " + gender +
                 ", возраст " + age +
-                ", cityID= " + cityID +
-                '}';
+                ", город " + city;
     }
 }

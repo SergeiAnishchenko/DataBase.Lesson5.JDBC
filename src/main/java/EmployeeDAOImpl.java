@@ -1,6 +1,7 @@
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,58 +24,44 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 
     @Override
     public Employee getEmployee(int id) {
-        Employee employee = null;
-        String sql = "SELECT * FROM employee WHERE id = " + id;
-        try (final Connection connection = ConnectionManager.getConnection();
-             PreparedStatement statement =
-                     connection.prepareStatement(sql)) {
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                String firstName = resultSet.getString("first_name");
-                String lastName = resultSet.getString("last_name");
-                String gender = resultSet.getString("gender");
-                int age = resultSet.getInt("age");
-                int cityID = resultSet.getInt("city_id");
-                employee = new Employee(id, firstName, lastName, gender, age, cityID);
-            }
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("myPersistenceUnit");
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
 
-        } catch (SQLException e) {
-            System.out.println("Ошибка при подключении к БД!");
-            e.printStackTrace();
-        }
+        entityManager.getTransaction().begin();
+        Employee employee = entityManager.find(Employee.class,id);
+        entityManager.getTransaction().commit();
+
+        entityManager.close();
+        entityManagerFactory.close();
         return employee;
     }
 
 
     @Override
-    public List<Employee> getAllEmployees() {
-        List<Employee> employees = new ArrayList<>();
+    public void getAllEmployees() {
 
-        try (final Connection connection = ConnectionManager.getConnection();
-             PreparedStatement statement =
-                     connection.prepareStatement("SELECT * FROM employee")) {
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("myPersistenceUnit");
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
 
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                String firstName = resultSet.getString("first_name");
-                String lastName = resultSet.getString("last_name");
-                String gender = resultSet.getString("gender");
-                int age = resultSet.getInt("age");
-                int cityID = resultSet.getInt("city_id");
-
-                employees.add(new Employee(id, firstName, lastName, gender, age, cityID));
-            }
-        } catch (SQLException e) {
-            System.out.println("Ошибка при подключении к БД!");
-            e.printStackTrace();
+        entityManager.getTransaction().begin();
+        String jpqlQuery = "from Employee";
+        TypedQuery<Employee> query = entityManager.createQuery(jpqlQuery, Employee.class);
+        List<Employee> employees = query.getResultList();
+        entityManager.getTransaction().commit();
+        for (Employee employee : employees) {
+            System.out.println("Идентификатор: " + employee.getId());
+            System.out.println("Имя: " + employee.getFirstName());
+            System.out.println("Фамилия: " + employee.getLastName());
+            System.out.println("Пол: " + employee.getGender());
+            System.out.println("Возраст: " + employee.getAge());
+            System.out.println("Город: " + employee.getCity());
+            entityManager.close();
+            entityManagerFactory.close();
         }
-        return employees;
     }
 
-
     @Override
-    public void changeEmployee(int id,String firstname, String lastName,String gender,int age,int cityID) {
+    public void changeEmployee(int id,String firstname, String lastName,String gender,int age,City city) {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("myPersistenceUnit");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
@@ -84,13 +71,12 @@ public class EmployeeDAOImpl implements EmployeeDAO {
         employee.setLastName(lastName);
         employee.setGender(gender);
         employee.setAge(age);
-        employee.setCityID(cityID);
+        employee.setCity(city);
         entityManager.merge(employee);
         entityManager.getTransaction().commit();
 
         entityManager.close();
         entityManagerFactory.close();
-
     }
 
 
