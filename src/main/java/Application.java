@@ -82,7 +82,7 @@ public class Application {
         cityDAO.getAllCities();
         employeeDAO.getAllEmployees();
 
-        employeeDAO.changeEmployee(89, "Олег", "Минаков", "Мужчина", 42, newCity);
+        employeeDAO.changeEmployee(89, "Олег", "Нестеров", "Мужчина", 42, newCity);
         System.out.println(employeeDAO.getEmployee(89));
 
         cityDAO.deleteCity(15);

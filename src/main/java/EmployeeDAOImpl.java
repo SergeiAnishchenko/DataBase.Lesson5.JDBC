@@ -3,18 +3,16 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class EmployeeDAOImpl implements EmployeeDAO {
 
 
-
     @Override
     public void adEmployee(String newEmployee) {
-        try (final Connection connection = ConnectionManager.getConnection()) {
-            Statement statement =
-                    connection.createStatement();
+        try (final Connection connection = ConnectionManager.getConnection();
+             Statement statement = connection.createStatement();
+        ) {
             int adCount = statement.executeUpdate(newEmployee);
 
         } catch (SQLException ex) {
@@ -28,7 +26,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         entityManager.getTransaction().begin();
-        Employee employee = entityManager.find(Employee.class,id);
+        Employee employee = entityManager.find(Employee.class, id);
         entityManager.getTransaction().commit();
 
         entityManager.close();
@@ -61,7 +59,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
     }
 
     @Override
-    public void changeEmployee(int id,String firstname, String lastName,String gender,int age,City city) {
+    public void changeEmployee(int id, String firstname, String lastName, String gender, int age, City city) {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("myPersistenceUnit");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
@@ -87,7 +85,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         entityManager.getTransaction().begin();
-        Employee employee = entityManager.find(Employee.class,id);
+        Employee employee = entityManager.find(Employee.class, id);
         entityManager.remove(employee);
         entityManager.getTransaction().commit();
 

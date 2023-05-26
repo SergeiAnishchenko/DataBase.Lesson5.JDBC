@@ -122,6 +122,6 @@ public class Employee {
                 ", фамилия " + lastName +
                 ", пол " + gender +
                 ", возраст " + age +
-                ", город " + city;
+                " " + city;
     }
 }
